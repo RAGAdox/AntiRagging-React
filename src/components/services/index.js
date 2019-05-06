@@ -1,3 +1,4 @@
 import LoginService from "./loginService";
 import checkToken from "./checkToken";
-export { LoginService, checkToken };
+import MyComplainService from "./myComplainService";
+export { LoginService, checkToken, MyComplainService };
