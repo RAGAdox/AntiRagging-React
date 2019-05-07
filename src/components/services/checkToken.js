@@ -4,16 +4,19 @@ import urlAPI from "../../config/url";
 import authUser from "./authUser";
 let username;
 let token;
+let name;
 //await AsyncStorage.getItem("secure_token",
 export default function checkToken() {
   return new Promise((resolve, reject) => {
     let p1 = AsyncStorage.getItem("secure_token");
     let p2 = AsyncStorage.getItem("username");
-    Promise.all([p1, p2]).then(result => {
+    let p3 = AsyncStorage.getItem("name");
+    Promise.all([p1, p2, p3]).then(result => {
       token = result[0];
       username = result[1];
+      name = result[2];
       console.warn(token, username);
-      if (username != null || token != null) {
+      if (username != null && token != null && name != null) {
         fetch(urlAPI + "/passauth/checktoken", {
           method: "GET",
           headers: {
@@ -26,6 +29,7 @@ export default function checkToken() {
             if (responseJson.success) {
               authUser.username = username;
               authUser.token = token;
+              authUser.name = name;
               return resolve(true);
             } else {
               return resolve(false);

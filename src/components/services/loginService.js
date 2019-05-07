@@ -49,15 +49,18 @@ export default class LoginService extends React.Component {
       if (responseJson.success == true) {
         authUser.username = details.username;
         authUser.token = responseJson.token;
+        authUser.name = responseJson.name;
         this.setState({
           token: await AsyncStorage.getItem("secure_token"),
           success: responseJson.success,
           message: responseJson.message
         });
+        console.warn(responseJson.name);
 
         let p1 = AsyncStorage.setItem("secure_token", responseJson.token);
         let p2 = AsyncStorage.setItem("username", details.username);
-        Promise.all([p1, p2]).then(result => {
+        let p3 = AsyncStorage.setItem("name", responseJson.name);
+        Promise.all([p1, p2, p3]).then(result => {
           console.warn(" Saved to local Storage " + result);
           this.props.navigation.navigate("home");
         });
