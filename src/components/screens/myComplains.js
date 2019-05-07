@@ -8,7 +8,8 @@ export default class MyComplains extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
-      success: false
+      success: false,
+      data: null
     };
     MyComplainService()
       .then(result => {
@@ -17,7 +18,8 @@ export default class MyComplains extends React.Component {
           console.warn(result);
           this.setState({
             isLoading: false,
-            success: true
+            success: true,
+            data: result
           });
         } else {
           this.setState({
@@ -36,9 +38,10 @@ export default class MyComplains extends React.Component {
   }
   render() {
     if (this.state.isLoading) {
+      //Loading
       return <Text>This is MyComplains {authUser.username}</Text>;
-    } else {
-      return <UserComplainList />;
+    } else if (this.state.success == true) {
+      return <UserComplainList ComplainData={this.state.data} />;
     }
   }
 }

@@ -1,15 +1,19 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, FlatList, StatusBar } from "react-native";
 import { UserComplain } from "../presentation";
 export default class UserComplainList extends React.Component {
   constructor(props) {
     super(props);
   }
+  _keyExtractor = item => item._id;
   render() {
     return (
-      <ScrollView>
-        <UserComplain />
-      </ScrollView>
+      <FlatList
+        style={{ marginTop: StatusBar.currentHeight }}
+        data={this.props.ComplainData}
+        keyExtractor={this._keyExtractor}
+        renderItem={({ item }) => <UserComplain data={item} />}
+      />
     );
   }
 }

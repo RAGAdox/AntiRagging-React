@@ -1,25 +1,96 @@
 import React from "react";
-import { View, Text, StatusBar } from "react-native";
+import { View, Text, Image, TouchableOpacity, StatusBar } from "react-native";
 import {
   createStackNavigator,
   createSwitchNavigator,
   createBottomTabNavigator,
-  createAppContainer
+  createAppContainer,
+  createDrawerNavigator,
+  DrawerItems,
+  DrawerActions
 } from "react-navigation";
 import {
   Login,
   Register,
   MyComplains,
   Complain,
-  Help
+  Help,
+  Profile
 } from "./components/screens";
 import { checkToken } from "./components/services";
-
+class NavigationDrawerStructure extends React.Component {
+  //Structure for the navigatin Drawer
+  toggleDrawer = () => {
+    //Props to open/close the drawer
+    this.props.navigationProps.toggleDrawer();
+  };
+  render() {
+    return (
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity onPress={this.toggleDrawer.bind(this)}>
+          <Image
+            source={require("../assets/menu.png")}
+            style={{ width: 25, height: 25, marginLeft: 5 }}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+function createScreenWithHeader(Screen) {
+  return createStackNavigator(
+    {
+      screen: Screen
+    },
+    {
+      headerMode: "float",
+      defaultNavigationOptions: ({ navigation }) => ({
+        title: "AntiRagging Application",
+        headerLeft: <NavigationDrawerStructure navigationProps={navigation} />
+      })
+    }
+  );
+}
 const Tab = createBottomTabNavigator({
-  mainFeed: MyComplains,
-  complain: Complain,
-  help: Help
+  mainFeed: createScreenWithHeader(MyComplains),
+  complain: createScreenWithHeader(Complain),
+  help: createScreenWithHeader(Help)
 });
+
+const DrawerContent = props => (
+  <View>
+    <View
+      style={{
+        backgroundColor: "#f50057",
+        height: 140,
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <Text style={{ color: "white", fontSize: 30 }}>Header</Text>
+    </View>
+    <DrawerItems {...props} />
+  </View>
+);
+const Drawer = createDrawerNavigator(
+  {
+    home: { screen: Tab },
+    profile: createScreenWithHeader(Profile)
+  },
+  {
+    drawerType: "slide",
+    contentComponent: DrawerContent,
+    contentOptions: {
+      activeTintColor: "#e91e63",
+      itemsContainerStyle: {
+        marginVertical: 0
+      },
+      iconContainerStyle: {
+        opacity: 1
+      }
+    }
+  }
+);
 const Stack = createStackNavigator(
   {
     login: {
@@ -42,18 +113,18 @@ const Stack = createStackNavigator(
     headerLayoutPreset: "center"
   }
 );
-const showTab = createSwitchNavigator(
+const showHome = createSwitchNavigator(
   {
-    mainTabs: Tab,
+    home: Drawer,
     login: Stack
   },
   {
-    initialRouteName: "mainTabs"
+    initialRouteName: "home"
   }
 );
 const showLogin = createSwitchNavigator(
   {
-    mainTabs: Tab,
+    home: Drawer,
     login: Stack
   },
   {
@@ -73,7 +144,7 @@ export default class AntiRagging extends React.Component {
     checkToken()
       .then(result => {
         if (result == true) {
-          this.AppContainer = createAppContainer(showTab);
+          this.AppContainer = createAppContainer(showHome);
           this.setState({
             isloggedin: true,
             checked: true

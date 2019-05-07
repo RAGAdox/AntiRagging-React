@@ -4,4 +4,5 @@ import MainApp from "./mainApp";
 import Complain from "./complain";
 import Help from "./help";
 import MyComplains from "./myComplains";
-export { Login, Register, MainApp, Help, Complain, MyComplains };
+import Profile from "./profile";
+export { Login, Register, MainApp, Help, Complain, MyComplains, Profile };
