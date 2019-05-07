@@ -14,7 +14,7 @@ export default function MyComplainService() {
       })
         .then(response => response.json())
         .then(responseJSON => {
-          if ((responseJSON.success = true)) {
+          if ((responseJSON.success = true) && responseJSON.complain[0]) {
             return resolve(responseJSON.complain);
           } else return reject(false);
         });

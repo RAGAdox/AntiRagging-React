@@ -17,7 +17,7 @@ import {
   Help,
   Profile
 } from "./components/screens";
-import { checkToken } from "./components/services";
+import { checkToken, logout } from "./components/services";
 class NavigationDrawerStructure extends React.Component {
   //Structure for the navigatin Drawer
   toggleDrawer = () => {
@@ -58,7 +58,7 @@ const Tab = createBottomTabNavigator({
 });
 
 const DrawerContent = props => (
-  <View>
+  <View style={{ flex: 1, flexDirection: "column" }}>
     <View
       style={{
         backgroundColor: "#f50057",
@@ -70,6 +70,27 @@ const DrawerContent = props => (
       <Text style={{ color: "white", fontSize: 30 }}>Header</Text>
     </View>
     <DrawerItems {...props} />
+    <View
+      style={{
+        flex: 1,
+
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <Text
+        style={{
+          position: "absolute",
+          bottom: 0,
+          fontSize: 30
+        }}
+        onPress={() => {
+          logout().then(props.navigation.navigate("login"));
+        }}
+      >
+        Logout
+      </Text>
+    </View>
   </View>
 );
 const Drawer = createDrawerNavigator(

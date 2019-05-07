@@ -42,6 +42,8 @@ export default class MyComplains extends React.Component {
       return <Text>This is MyComplains {authUser.username}</Text>;
     } else if (this.state.success == true) {
       return <UserComplainList ComplainData={this.state.data} />;
+    } else if (this.state.success == false) {
+      return <Text>No Complain Has Been Registered</Text>;
     }
   }
 }
