@@ -48,6 +48,8 @@ export default class MyComplains extends React.Component {
   _onRefresh = () => {
     this.setState({ refreshing: true });
     this.fetchData();
+    this.refs.ComplainList.shouldRefresh();
+    console.warn("from myComplains" + this.refs);
   };
 
   render() {
@@ -64,14 +66,23 @@ export default class MyComplains extends React.Component {
             />
           }
         >
-          <UserComplainList ComplainData={this.state.data} />
+          <UserComplainList ComplainData={this.state.data} ref="ComplainList" />
         </ScrollView>
       );
     } else if (this.state.success == false) {
       return (
-        <Text style={{ textAlign: "center", fontSize: 25 }}>
-          No Complain Has Been Registered
-        </Text>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
+          <Text style={{ textAlign: "center", fontSize: 25 }}>
+            No Complain Has Been Registered
+          </Text>
+        </ScrollView>
       );
     }
   }

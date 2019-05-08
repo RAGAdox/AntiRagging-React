@@ -7,6 +7,13 @@ export default class UserComplain extends React.Component {
       data: this.props.data
     };
   }
+  refresh() {
+    console.warn("refresh from presentation");
+
+    /*this.setState({
+      data: this.props.data
+    });*/
+  }
   render() {
     return (
       <View
