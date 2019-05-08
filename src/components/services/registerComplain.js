@@ -1,9 +1,14 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, Platform } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Platform,
+  View
+} from "react-native";
 import { Constants, Location, Permissions } from "expo";
 import authUser from "./authUser";
 import urlAPI from "../../config/url";
-import nullthrows from "nullthrows";
 export default class RegisterComplain extends React.Component {
   constructor(props) {
     super(props);
@@ -61,10 +66,12 @@ export default class RegisterComplain extends React.Component {
         body: formBody
       });
       let responseJson = await response.json();
-      if (responseJson.success)
+      if (responseJson.success) {
         this.setState({
           message: responseJson.message
         });
+        //shouldRemove = true;
+      }
       //console.warn(responseJson.message)
       else
         this.setState({
@@ -77,16 +84,20 @@ export default class RegisterComplain extends React.Component {
   }
   render() {
     return (
-      <TouchableOpacity
-        disabled={!this.state.locationAvailable}
-        style={styles.button}
-        onPress={() => {
-          console.warn("props returned", this.props.data);
-          this.postComplainAPI();
-        }}
-      >
-        <Text>Register Complain</Text>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          disabled={!this.state.locationAvailable}
+          style={styles.button}
+          onPress={() => {
+            console.warn("props returned", this.props.data);
+            this.postComplainAPI();
+            this.props.reset();
+          }}
+        >
+          <Text style={styles.buttonText}>Register Complain</Text>
+        </TouchableOpacity>
+        <Text>{this.state.message}</Text>
+      </View>
     );
   }
 }
@@ -102,5 +113,9 @@ const styles = StyleSheet.create({
 
     justifyContent: "center",
     alignItems: "center"
+  },
+  buttonText: {
+    fontSize: 20,
+    color: "rgba(230,230,230,0.9)"
   }
 });

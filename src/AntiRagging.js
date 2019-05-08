@@ -4,6 +4,7 @@ import {
   createStackNavigator,
   createSwitchNavigator,
   createBottomTabNavigator,
+  createMaterialTopTabNavigator,
   createAppContainer,
   createDrawerNavigator,
   DrawerItems,
@@ -51,11 +52,16 @@ function createScreenWithHeader(Screen) {
     }
   );
 }
-const Tab = createBottomTabNavigator({
-  mainFeed: createScreenWithHeader(MyComplains),
-  complain: createScreenWithHeader(Complain),
-  help: createScreenWithHeader(Help)
-});
+const Tab = createMaterialTopTabNavigator(
+  {
+    mainFeed: createScreenWithHeader(MyComplains),
+    complain: createScreenWithHeader(Complain),
+    help: createScreenWithHeader(Help)
+  },
+  {
+    tabBarPosition: "bottom"
+  }
+);
 
 const DrawerContent = props => (
   <View style={{ flex: 1, flexDirection: "column" }}>

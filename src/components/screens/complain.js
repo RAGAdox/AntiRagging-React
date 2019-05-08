@@ -6,10 +6,12 @@ import {
   TextInput,
   StyleSheet,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableWithoutFeedback
 } from "react-native";
 import { LinearGradient, Constants, Location, Permissions } from "expo";
 import { RegisterComplain } from "../services";
+
 export default class Complain extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +20,14 @@ export default class Complain extends React.Component {
       details: ""
     };
   }
+
+  resetScreen = () => {
+    console.warn("reset Screen Called");
+    this.setState({
+      ragger: "",
+      details: ""
+    });
+  };
   showDetails() {
     if (this.state.showDetails)
       return (
@@ -43,6 +53,7 @@ export default class Complain extends React.Component {
             placeholder="Enter Name of Ragger"
             style={styles.input}
             onChangeText={ragger => this.setState({ ragger })}
+            value={this.state.ragger}
           />
           <Picker
             style={styles.picker}
@@ -71,7 +82,8 @@ export default class Complain extends React.Component {
             <Picker.Item label="Other" value="other" />
           </Picker>
           {this.showDetails()}
-          <RegisterComplain data={this.state} />
+
+          <RegisterComplain data={this.state} reset={this.resetScreen} />
         </LinearGradient>
       </View>
     );
