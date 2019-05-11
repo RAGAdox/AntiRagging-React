@@ -12,7 +12,6 @@ import {
 import { Constants, Location, Permissions } from "expo";
 import authUser from "./authUser";
 import urlAPI from "../../config/url";
-import { requireNativeViewManager } from "expo-core";
 export default class RegisterComplain extends React.Component {
   constructor(props) {
     super(props);
