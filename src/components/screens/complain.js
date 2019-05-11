@@ -59,16 +59,18 @@ export default class Complain extends React.Component {
             style={styles.picker}
             itemStyle={{ backgroundColor: "#00ff00", fontSize: 20 }}
             mode="dropdown"
-            selectedValue={this.state.details}
+            selectedValue={
+              !this.state.showDetails ? this.state.details : "Other"
+            }
             //style={{ height: 50, width: 100 }}
             onValueChange={(itemValue, itemIndex) => {
-              this.setState({ details: itemValue });
+              //this.setState({ details: itemValue });
               //console.warn(itemIndex);
               if (itemIndex != 4) {
-                this.setState({ showDetails: false });
+                this.setState({ showDetails: false, details: itemValue });
                 console.warn(this.state.details);
               } else {
-                this.setState({ showDetails: true });
+                this.setState({ showDetails: true, details: "" });
               }
             }}
           >

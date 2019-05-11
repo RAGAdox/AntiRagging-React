@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  Platform
+} from "react-native";
+import { Constants, Location, Permissions } from "expo";
 import {
   createStackNavigator,
   createSwitchNavigator,
@@ -18,6 +26,7 @@ import {
   Help,
   Profile
 } from "./components/screens";
+import LocationContext from "./components/Context/locationContext";
 import { checkToken, logout } from "./components/services";
 class NavigationDrawerStructure extends React.Component {
   //Structure for the navigatin Drawer
@@ -166,7 +175,8 @@ export default class AntiRagging extends React.Component {
     super(props);
     this.state = {
       isloggedin: "",
-      checked: false
+      checked: false,
+      access: false
     };
     checkToken()
       .then(result => {
@@ -193,8 +203,53 @@ export default class AntiRagging extends React.Component {
         });
       });
   }
+  componentWillMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          "Oops, this will not work on Sketch in an Android emulator. Try it on your device!",
+        access: false
+      });
+    } else {
+      console.warn("Access granted from app root complain");
+      let p1 = Permissions.askAsync(Permissions.LOCATION);
+      Promise.all([p1]).then(result => {
+        console.warn(result[0].status);
+        if (result[0].status !== "granted") {
+          this.setState({
+            errorMessage: "Permission to access location was denied",
+            access: false
+          });
+        } else {
+          let p2 = Location.getCurrentPositionAsync({});
+          Promise.all([p2]).then(result => {
+            this.setState({
+              location: result[0],
+              access: true
+            });
+          });
+        }
+      });
+      /*if (status !== "granted") {
+        this.setState({
+          errorMessage: "Permission to access location was denied",
+          access: false
+        });
+      } else {
+        this.setState({
+          access: true
+        });
+      }*/
+      //this._getLocationAsync();
+    }
+  }
   render() {
-    if (this.state.checked) return <this.AppContainer />;
+    if (this.state.checked && this.state.access)
+      return (
+        <LocationContext.Provider value={this.state.location}>
+          <this.AppContainer />
+        </LocationContext.Provider>
+      );
     else
       return (
         <View>

@@ -10,12 +10,13 @@ import {
   TouchableWithoutFeedback
 } from "react-native";
 import { LinearGradient, Constants, Location, Permissions } from "expo";
-import { RegisterComplain } from "../services";
+import { HelpRegisterComplain } from "../services";
 
 export default class Complain extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: "",
       ragger: "",
       details: ""
     };
@@ -24,6 +25,7 @@ export default class Complain extends React.Component {
   resetScreen = () => {
     console.warn("reset Screen Called");
     this.setState({
+      name: "",
       ragger: "",
       details: ""
     });
@@ -35,6 +37,7 @@ export default class Complain extends React.Component {
           <TextInput
             style={styles.input}
             placeholder="Details"
+            value={this.state.details}
             onChangeText={details => this.setState({ details })}
           />
         </React.Fragment>
@@ -50,6 +53,12 @@ export default class Complain extends React.Component {
           style={styles.mainPage}
         >
           <TextInput
+            placeholder="Enter name of the student being ragged"
+            style={styles.input}
+            onChangeText={name => this.setState({ name })}
+            value={this.state.name}
+          />
+          <TextInput
             placeholder="Enter Name of Ragger"
             style={styles.input}
             onChangeText={ragger => this.setState({ ragger })}
@@ -59,16 +68,18 @@ export default class Complain extends React.Component {
             style={styles.picker}
             itemStyle={{ backgroundColor: "#00ff00", fontSize: 20 }}
             mode="dropdown"
-            selectedValue={this.state.details}
+            selectedValue={
+              !this.state.showDetails ? this.state.details : "Other"
+            }
             //style={{ height: 50, width: 100 }}
             onValueChange={(itemValue, itemIndex) => {
-              this.setState({ details: itemValue });
+              //this.setState({  });
               //console.warn(itemIndex);
               if (itemIndex != 4) {
-                this.setState({ showDetails: false });
+                this.setState({ showDetails: false, details: itemValue });
                 console.warn(this.state.details);
               } else {
-                this.setState({ showDetails: true });
+                this.setState({ showDetails: true, details: "" });
               }
             }}
           >
@@ -83,7 +94,7 @@ export default class Complain extends React.Component {
           </Picker>
           {this.showDetails()}
 
-          <RegisterComplain data={this.state} reset={this.resetScreen} />
+          <HelpRegisterComplain data={this.state} reset={this.resetScreen} />
         </LinearGradient>
       </View>
     );

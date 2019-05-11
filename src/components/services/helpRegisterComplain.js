@@ -13,10 +13,9 @@ import { Constants, Location, Permissions } from "expo";
 import authUser from "./authUser";
 import urlAPI from "../../config/url";
 import LocationContext from "../Context/locationContext";
-export default class RegisterComplain extends React.Component {
+export default class HelpRegisterComplain extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       location: null,
       locationAvailable: false,
@@ -24,8 +23,10 @@ export default class RegisterComplain extends React.Component {
       success: false
     };
   }
+
   async postComplainAPI() {
     let details = {
+      name: this.props.data.name,
       ragger: this.props.data.ragger,
       locationLatitude: this.state.location.coords.latitude,
       locationLongitude: this.state.location.coords.longitude,
@@ -75,13 +76,13 @@ export default class RegisterComplain extends React.Component {
       return (
         <View>
           <TouchableOpacity
-            disabled={!this.state.locationAvailable || this.state.onPress}
+            disabled={this.state.onPress}
             style={styles.button}
             onPress={() => {
               this.setState({
                 onPress: true
               });
-              console.warn("props returned", this.props.data);
+              //console.warn("props returned", this.props.data);
               this.postComplainAPI();
               this.props.reset();
             }}
@@ -105,12 +106,12 @@ export default class RegisterComplain extends React.Component {
     else
       return (
         <LocationContext.Consumer>
-          {data =>
+          {data => {
             this.setState({
               location: data,
               locationAvailable: true
-            })
-          }
+            });
+          }}
         </LocationContext.Consumer>
       );
   }
