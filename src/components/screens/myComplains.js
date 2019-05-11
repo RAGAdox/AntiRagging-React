@@ -1,11 +1,11 @@
 import React from "react";
 import { Text, RefreshControl, ScrollView } from "react-native";
 import { NavigationEvents } from "react-navigation";
-
 import authUser from "../services/authUser";
 import { UserComplainList } from "../container";
+import MyComplainContext from "../Context/myComplainContext";
 import { MyComplainService } from "../services";
-import { fetchUpdateAsync } from "expo/build/Updates/Updates";
+import { UserComplain } from "../presentation";
 //import { ScrollView } from "react-native-gesture-handler";
 export default class MyComplains extends React.Component {
   constructor(props) {
@@ -21,9 +21,7 @@ export default class MyComplains extends React.Component {
   fetchData() {
     MyComplainService()
       .then(result => {
-        //console.warn(result);
         if (result != false) {
-          console.warn(result);
           this.setState({
             isLoading: false,
             success: true,
@@ -38,7 +36,6 @@ export default class MyComplains extends React.Component {
         }
       })
       .catch(result => {
-        console.warn("rejected");
         this.setState({
           isLoading: false,
           success: false
@@ -48,8 +45,6 @@ export default class MyComplains extends React.Component {
   _onRefresh = () => {
     this.setState({ refreshing: true });
     this.fetchData();
-    this.refs.ComplainList.shouldRefresh();
-    console.warn("from myComplains" + this.refs);
   };
 
   render() {
@@ -58,16 +53,24 @@ export default class MyComplains extends React.Component {
       return <Text>This is MyComplains {authUser.username}</Text>;
     } else if (this.state.success == true) {
       return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
-            />
-          }
-        >
-          <UserComplainList ComplainData={this.state.data} ref="ComplainList" />
-        </ScrollView>
+        <React.Fragment>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
+          >
+            {this.state.data.map(item => {
+              return (
+                <MyComplainContext.Provider value={item} key={item._id}>
+                  <UserComplain />
+                </MyComplainContext.Provider>
+              );
+            })}
+          </ScrollView>
+        </React.Fragment>
       );
     } else if (this.state.success == false) {
       return (
