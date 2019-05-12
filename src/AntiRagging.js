@@ -4,10 +4,12 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
   StatusBar,
   Platform
 } from "react-native";
-import { Constants, Location, Permissions } from "expo";
+import { LinearGradient, Constants, Location, Permissions } from "expo";
 import {
   createStackNavigator,
   createSwitchNavigator,
@@ -63,27 +65,74 @@ function createScreenWithHeader(Screen) {
 }
 const Tab = createMaterialTopTabNavigator(
   {
-    mainFeed: createScreenWithHeader(MyComplains),
-    complain: createScreenWithHeader(Complain),
-    help: createScreenWithHeader(Help)
+    mainFeed: {
+      screen: createScreenWithHeader(MyComplains),
+      navigationOptions: {
+        tabBarIcon: (
+          <Image
+            source={require("../assets/list.png")}
+            style={{ width: 30, height: 30 }}
+          />
+        )
+      }
+    },
+    complain: {
+      screen: createScreenWithHeader(Complain),
+      navigationOptions: {
+        tabBarIcon: (
+          <Image
+            source={require("../assets/complain.png")}
+            style={{ width: 30, height: 30 }}
+          />
+        )
+      }
+    },
+    help: {
+      screen: createScreenWithHeader(Help),
+      navigationOptions: {
+        tabBarIcon: (
+          <Image
+            source={require("../assets/help.png")}
+            style={{ width: 30, height: 30 }}
+          />
+        )
+      }
+    }
   },
   {
-    tabBarPosition: "bottom"
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      labelStyle: {
+        fontSize: 12,
+        color: "#000000"
+      },
+      tabStyle: {
+        //width: 100,
+      },
+      style: {
+        backgroundColor: "#ffffff",
+        borrderTopWidth: 2
+      },
+      showIcon: true
+    }
   }
 );
 
 const DrawerContent = props => (
   <View style={{ flex: 1, flexDirection: "column" }}>
-    <View
-      style={{
-        backgroundColor: "#f50057",
-        height: 140,
-        alignItems: "center",
-        justifyContent: "center"
-      }}
+    <LinearGradient
+      colors={["#905DB3", "#9E3D92", "#C53766"]}
+      start={[0, 0]}
+      style={styles.drawerHeader}
     >
-      <Text style={{ color: "white", fontSize: 30 }}>Header</Text>
-    </View>
+      <Image
+        source={require("../assets/icon.png")}
+        style={{ width: 50, height: 50 }}
+      />
+      <Text style={{ color: "white", fontSize: 20 }}>
+        AntiRagging Application
+      </Text>
+    </LinearGradient>
     <DrawerItems {...props} />
     <View
       style={{
@@ -93,28 +142,64 @@ const DrawerContent = props => (
         justifyContent: "center"
       }}
     >
-      <Text
+      <TouchableOpacity
         style={{
           position: "absolute",
-          bottom: 0,
-          fontSize: 30
+          bottom: 10,
+          flexDirection: "row"
         }}
         onPress={() => {
           logout().then(props.navigation.navigate("login"));
         }}
       >
-        Logout
-      </Text>
+        <Image
+          source={require("../assets/logout.png")}
+          style={{ width: 20, height: 20, marginHorizontal: 5 }}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            marginHorizontal: 5
+          }}
+        >
+          Logout
+        </Text>
+      </TouchableOpacity>
     </View>
   </View>
 );
 const Drawer = createDrawerNavigator(
   {
-    home: { screen: Tab },
-    profile: createScreenWithHeader(Profile)
+    home: {
+      screen: Tab,
+      navigationOptions: {
+        title: "Home",
+        drawerIcon: (
+          <Image
+            source={require("../assets/home.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )
+      }
+    },
+    profile: {
+      screen: createScreenWithHeader(Profile),
+      navigationOptions: {
+        title: "Profile",
+        drawerIcon: (
+          <Image
+            source={require("../assets/profile.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )
+      }
+    }
   },
   {
     drawerType: "slide",
+    overlayColor: "transparent",
+    hideStatusBar: true,
+    drawerWidth: 200,
     contentComponent: DrawerContent,
     contentOptions: {
       activeTintColor: "#e91e63",
@@ -252,9 +337,48 @@ export default class AntiRagging extends React.Component {
       );
     else
       return (
-        <View>
-          <Text>Loading</Text>
+        <View style={{ flex: 1, backgroundColor: "#00ff00" }}>
+          <LinearGradient
+            colors={["#905DB3", "#9E3D92", "#C53766"]}
+            start={[0, 0]}
+            style={styles.mainPage}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                color: "#ffffff",
+                textAlign: "center",
+                textAlignVertical: "center"
+              }}
+            >
+              Loading
+            </Text>
+            <ActivityIndicator size="large" color="#ffffff" />
+          </LinearGradient>
         </View>
       );
   }
 }
+const styles = StyleSheet.create({
+  Screen: {
+    height: 100 + "%",
+    width: 100 + "%",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  mainPage: {
+    height: 100 + "%",
+    width: 100 + "%",
+    flex: 1,
+    //flexDirection: "row",
+    justifyContent: "center"
+    //alignItems: "center"
+  },
+  drawerHeader: {
+    width: 100 + "%",
+    height: 20 + "%",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});

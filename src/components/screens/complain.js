@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.1)",
     fontSize: 20,
     borderRadius: 10,
+    color: "#ffffff",
     margin: 10
   },
   picker: {

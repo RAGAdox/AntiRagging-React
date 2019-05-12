@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.1)",
     fontSize: 20,
     borderRadius: 10,
-    margin: 10
+    margin: 10,
+    color: "#ffffff"
   },
   picker: {
     borderWidth: 2,
