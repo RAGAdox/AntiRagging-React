@@ -199,7 +199,7 @@ const Drawer = createDrawerNavigator(
     drawerType: "slide",
     overlayColor: "transparent",
     hideStatusBar: true,
-    drawerWidth: 200,
+    drawerWidth: 300,
     contentComponent: DrawerContent,
     contentOptions: {
       activeTintColor: "#e91e63",

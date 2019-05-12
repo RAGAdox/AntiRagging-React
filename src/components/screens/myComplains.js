@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, RefreshControl, ScrollView } from "react-native";
+import {
+  Text,
+  RefreshControl,
+  ScrollView,
+  ActivityIndicator,
+  View
+} from "react-native";
 import { NavigationEvents } from "react-navigation";
 import authUser from "../services/authUser";
 import { UserComplainList } from "../container";
@@ -50,7 +56,21 @@ export default class MyComplains extends React.Component {
   render() {
     if (this.state.isLoading) {
       //Loading
-      return <Text>This is MyComplains {authUser.username}</Text>;
+      return (
+        <View
+          style={{
+            flex: 1,
+            //flexDirection: "row",
+            alignItem: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Text style={{ fontSize: 20, textAlign: "center" }}>
+            Fetching complains for {authUser.name}
+          </Text>
+          <ActivityIndicator size="large" color="#000000" />
+        </View>
+      );
     } else if (this.state.success == true) {
       return (
         <React.Fragment>

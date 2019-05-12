@@ -58,10 +58,19 @@ export default class Profile extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <React.Fragment>
-          <Text>Loading</Text>
-          <ActivityIndicator />
-        </React.Fragment>
+        <View
+          style={{
+            flex: 1,
+            //flexDirection: "row",
+            alignItem: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Text style={{ fontSize: 20, textAlign: "center" }}>
+            Fetching Profile for {authUser.name}
+          </Text>
+          <ActivityIndicator size="large" color="#000000" />
+        </View>
       );
     } else if (this.state.success) {
       return (
