@@ -4,8 +4,11 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Vibration,
   StyleSheet,
   Keyboard,
+  ActivityIndicator,
+  Alert,
   KeyboardAvoidingView
 } from "react-native";
 import { LinearGradient } from "expo";
@@ -14,6 +17,7 @@ export default class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      onPress: false,
       validated: false,
       username: "",
       name: "",
@@ -82,9 +86,20 @@ export default class Register extends React.Component {
       let responseJSON = await response.json();
       //console.warn(responseJSON)
       //return responseJSON.success;
-      if (responseJSON.success == true)
-        this.setState({ success: true, message: responseJSON.message });
-      else {
+      if (responseJSON.success == true) {
+        Vibration.vibrate(1000);
+        this.setState({
+          success: true,
+          message: responseJSON.message,
+          onPress: false
+        });
+        Alert.alert(
+          "Signup",
+          this.state.message,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
+      } else {
         let errorMessage = "";
         console.warn(typeof responseJSON.message);
         if (typeof responseJSON.message == "string") {
@@ -105,8 +120,15 @@ export default class Register extends React.Component {
         this.setState({
           success: false,
           warning: errorMessage,
-          message: responseJSON.message
+          message: responseJSON.message,
+          onPress: false
         });
+        Alert.alert(
+          "Error During Signup",
+          this.state.warning,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
         /*for(var tag in responseJSON.error)
                     console.warn(tag)*/
         //console.warn(users)
@@ -310,13 +332,14 @@ export default class Register extends React.Component {
               }
             }}
           />
-          <Text>{this.state.warning}</Text>
-          <Text>{this.state.message}</Text>
+          {/*<Text>{this.state.warning}</Text>
+          <Text>{this.state.message}</Text>*/}
           <TouchableOpacity
+            disabled={this.state.onPress}
             style={styles.button}
             title="Signup"
             onPress={() => {
-              console.warn("Button Press");
+              this.setState({ onPress: true });
               if (
                 this.state.username != "INVALID" &&
                 this.state.password != "INVALID" &&
@@ -334,10 +357,25 @@ export default class Register extends React.Component {
                     console.warn("success");
                   }
                 });
+              } else {
+                Alert.alert(
+                  "All Fields are mandatory",
+                  "Plese complete all the fields in order to SignUp",
+                  [
+                    {
+                      text: "OK",
+                      onPress: () => this.setState({ onPress: false })
+                    }
+                  ],
+                  { cancelable: false }
+                );
               }
             }}
           >
             <Text style={styles.buttonText}>Sign Up</Text>
+            {this.state.onPress && !this.state.success ? (
+              <ActivityIndicator />
+            ) : null}
           </TouchableOpacity>
         </ScrollView>
       </LinearGradient>
@@ -363,6 +401,15 @@ const styles = StyleSheet.create({
     justifyContent: "center"
     //alignItems: "center"
   },
+  lable: {
+    //padding: 5,
+    //height: 50,
+
+    fontSize: 20,
+    marginLeft: 10,
+    color: "#ffffff"
+    //margin: 10
+  },
   input: {
     borderWidth: 2,
     padding: 5,
@@ -371,7 +418,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.1)",
     fontSize: 20,
     borderRadius: 10,
-    margin: 10
+    margin: 10,
+    color: "#ffffff"
   },
   picker: {
     borderWidth: 2,
@@ -392,7 +440,14 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     padding: 5,
     margin: 10,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
+  },
+  buttonText: {
+    fontSize: 20,
+    flex: 1,
+    textAlign: "center",
+    color: "rgba(230,230,230,0.9)"
   }
 });

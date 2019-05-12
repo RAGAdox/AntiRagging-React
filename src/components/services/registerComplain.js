@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   Vibration,
+  Alert,
   View
 } from "react-native";
 import { Constants, Location, Permissions } from "expo";
@@ -58,13 +59,25 @@ export default class RegisterComplain extends React.Component {
           onPress: false
         });
         Vibration.vibrate(1000);
-        //shouldRemove = true;
+        Alert.alert(
+          "Complain Registration",
+          this.state.message,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
       }
       //console.warn(responseJson.message)
-      else
+      else {
         this.setState({
           message: responseJson.message
         });
+        Alert.alert(
+          "Complain Registration Error",
+          this.state.message,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
+      }
       //console.warn('Error In registrring Complain'+responseJson.message)
     } catch (error) {
       console.error(error);
@@ -99,7 +112,7 @@ export default class RegisterComplain extends React.Component {
               <ActivityIndicator />
             ) : null}
           </TouchableOpacity>
-          <Text style={{ textAlign: "center" }}>{this.state.message}</Text>
+          {/*<Text style={{ textAlign: "center" }}>{this.state.message}</Text>*/}
         </View>
       );
     else

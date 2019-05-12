@@ -32,12 +32,15 @@ export default class Login extends React.Component {
         >
           <TextInput
             placeholder="Enter Username"
+            textContentType="username"
             style={styles.input}
             onChangeText={username => this.setState({ username })}
           />
           <TextInput
             placeholder="Enter Password"
             style={styles.input}
+            secureTextEntry={true}
+            textContentType="password"
             onChangeText={password => this.setState({ password })}
           />
           <LoginService
@@ -83,7 +86,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.1)",
     fontSize: 20,
     borderRadius: 10,
-    margin: 10
+    margin: 10,
+    color: "#ffffff"
   },
   button: {
     borderColor: "rgba(255,255,255,0.1)",

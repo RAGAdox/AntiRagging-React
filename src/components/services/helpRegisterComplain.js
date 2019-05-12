@@ -7,7 +7,8 @@ import {
   Image,
   ActivityIndicator,
   Vibration,
-  View
+  View,
+  Alert
 } from "react-native";
 import { Constants, Location, Permissions } from "expo";
 import authUser from "./authUser";
@@ -59,13 +60,26 @@ export default class HelpRegisterComplain extends React.Component {
           onPress: false
         });
         Vibration.vibrate(1000);
+        Alert.alert(
+          "Requesting Help",
+          this.state.message,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
         //shouldRemove = true;
       }
       //console.warn(responseJson.message)
-      else
+      else {
         this.setState({
           message: responseJson.message
         });
+        Alert.alert(
+          "Error Requesting Help",
+          this.state.message,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
+      }
       //console.warn('Error In registrring Complain'+responseJson.message)
     } catch (error) {
       console.error(error);
@@ -100,7 +114,7 @@ export default class HelpRegisterComplain extends React.Component {
               <ActivityIndicator />
             ) : null}
           </TouchableOpacity>
-          <Text style={{ textAlign: "center" }}>{this.state.message}</Text>
+          {/*<Text style={{ textAlign: "center" }}>{this.state.message}</Text>*/}
         </View>
       );
     else

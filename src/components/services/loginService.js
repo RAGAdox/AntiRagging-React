@@ -5,7 +5,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   AsyncStorage,
-  View
+  View,
+  Alert
 } from "react-native";
 import authUser from "./authUser";
 import urlAPI from "../../config/url";
@@ -71,6 +72,12 @@ export default class LoginService extends React.Component {
           success: responseJson.success,
           message: responseJson.message
         });
+        Alert.alert(
+          "Login Error",
+          this.state.message,
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
       }
     } catch (error) {
       console.error(error);
@@ -79,17 +86,17 @@ export default class LoginService extends React.Component {
   render() {
     return (
       <View>
-        {!this.state.isPressed && !this.state.success ? (
+        {/*!this.state.isPressed && !this.state.success ? (
           <Text
             style={
               this.state.success
-                ? { color: "#00ff00" }
-                : { color: "#ff0000", textAlign: "center" }
+                ? { color: "#00ff00", fontSize: 15, textAlign: "center" }
+                : { color: "#ff0000", textAlign: "center", fontSize: 15 }
             }
           >
             {this.state.message}
           </Text>
-        ) : null}
+          ) : null*/}
         <TouchableOpacity
           style={styles.button}
           onPress={() => this.getTokenFromAPI()}
