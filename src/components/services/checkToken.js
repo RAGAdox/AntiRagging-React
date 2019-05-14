@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import { createSwitchNavigator } from "react-navigation";
+import { Alert } from "react-native";
 import urlAPI from "../../config/url";
 import authUser from "./authUser";
 let username;
@@ -17,25 +17,34 @@ export default function checkToken() {
       name = result[2];
       console.warn(token, username);
       if (username != null && token != null && name != null) {
-        fetch(urlAPI + "/passauth/checktoken", {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + token,
-            username: username
-          }
-        })
-          .then(response => response.json())
-          .then(responseJson => {
-            if (responseJson.success) {
-              authUser.username = username;
-              authUser.token = token;
-              authUser.name = name;
-              return resolve(true);
-            } else {
-              return resolve(false);
+        try {
+          fetch(urlAPI + "/passauth/checktoken", {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+              username: username
             }
-          });
-        //return resolve(true);
+          })
+            .then(response => response.json())
+            .then(responseJson => {
+              if (responseJson.success) {
+                authUser.username = username;
+                authUser.token = token;
+                authUser.name = name;
+                return resolve(true);
+              } else {
+                return resolve(false);
+              }
+            });
+          //return resolve(true);
+        } catch (e) {
+          Alert.alert(
+            "AntiRagging Application",
+            "Cannot Access Server",
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: false }
+          );
+        }
       } else return reject(false);
     });
   });

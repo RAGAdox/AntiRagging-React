@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import authUser from "./authUser";
 import urlAPI from "../../config/url";
 
@@ -19,6 +20,12 @@ export default function MyComplainService() {
           } else return reject(false);
         });
     } catch (e) {
+      Alert.alert(
+        "AntiRagging Application",
+        "Cannot Access API",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
       return reject(false);
     }
   });
